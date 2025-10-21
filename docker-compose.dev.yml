@@ -1,0 +1,176 @@
+services:
+  snippet-service:
+    image: placeholder-image:latest
+    container_name: snippet-service
+    ports:
+      - "9000:8080"
+    depends_on:
+      - db-snippet
+      - redis
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db-snippet:5432/snippetDB
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+      - PRINT_SCRIPT_SERVICE_URL=http://printscript-service:8080
+      - PERMISSIONS_SERVICE_URL=http://permissions-service:8080
+      - BUCKET_SERVICE_URL=http://asset-service:8080
+      - AUTH0_AUDIENCE=https://snippet-searcher-api/
+      - AUTH_SERVER_URI=https://dev-g1sija0qkp7jodd2.us.auth0.com/
+      - AUTH_CLIENT_ID=RkCAJGg3oX65F2DhiHzU82Urkoh3EYZs
+      - AUTH_CLIENT_SECRET=5AguEjHjI0tPlkd6xbTp9K_1zZby9VxUzxREe3euAFOx1IgabBxAZNI1R0TeDYF9
+      - STREAM_LINT_KEY=dnosadnisandonasdsoa
+      - STREAM_FORMAT_KEY=fnosadnisandonasdsoa
+      - STREAM_STATUS_KEY=dasdisanddasdasdasjdiuu-ddjjdjd
+      - STREAM_CONSUMER_GROUP_SNIPPET=snippet-consumer-uudjdosaid-group
+      - REDIS_PORT=6379
+      - REDIS_HOST=redis
+      - NEW_RELIC_LICENSE_KEY=c54d3357ab8d20d61be74c168d239643FFFFNRAL
+    networks:
+      - snippet_network
+
+
+  db-snippet:
+    image: postgres:latest
+    container_name: db-snippet
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=snippetDB
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - postgres_data_snippets:/var/lib/postgresql/data
+    networks:
+      - snippet_network
+
+
+  printscript-service:
+    image: placeholder-image:latest
+    container_name: printscript-service
+    depends_on:
+      - redis
+    ports:
+      - "3000:8080"
+    environment:
+      - BUCKET_SERVICE_URL=http://asset-service:8080
+      - AUTH0_AUDIENCE=https://snippet-searcher-api/
+      - AUTH_SERVER_URI=https://dev-g1sija0qkp7jodd2.us.auth0.com/
+      - AUTH_CLIENT_ID=RkCAJGg3oX65F2DhiHzU82Urkoh3EYZs
+      - AUTH_CLIENT_SECRET=5AguEjHjI0tPlkd6xbTp9K_1zZby9VxUzxREe3euAFOx1IgabBxAZNI1R0TeDYF9
+      - STREAM_LINT_KEY=dnosadnisandonasdsoa
+      - STREAM_FORMAT_KEY=fnosadnisandonasdsoa
+      - STREAM_STATUS_KEY=dasdisanddasdasdasjdiuu-ddjjdjd
+      - STREAM_CONSUMER_GROUP_PRINTSCRIPT=printscript-consumer-uudjdosaid-group
+      - REDIS_PORT=6379
+      - REDIS_HOST=redis
+      - NEW_RELIC_LICENSE_KEY=c54d3357ab8d20d61be74c168d239643FFFFNRAL
+    networks:
+      - snippet_network
+
+  permissions-service:
+    image: placeholder-image:latest
+    container_name: permissions-service
+    ports:
+      - "5000:8080"
+    depends_on:
+      - db-permissions
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db-permissions:5432/permissionsDB
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+      - AUTH0_AUDIENCE=https://snippet-searcher-api/
+      - AUTH_SERVER_URI=https://dev-g1sija0qkp7jodd2.us.auth0.com/
+      - AUTH_CLIENT_ID=RkCAJGg3oX65F2DhiHzU82Urkoh3EYZs
+      - AUTH_CLIENT_SECRET=5AguEjHjI0tPlkd6xbTp9K_1zZby9VxUzxREe3euAFOx1IgabBxAZNI1R0TeDYF9
+      - AUTH0_AUDIENCE_API=https://dev-g1sija0qkp7jodd2.us.auth0.com/api/v2/
+      - NEW_RELIC_LICENSE_KEY=c54d3357ab8d20d61be74c168d239643FFFFNRAL
+    networks:
+      - snippet_network
+
+  db-permissions:
+    image: postgres:latest
+    container_name: db-permissions
+    ports:
+      - "5433:5432"
+    environment:
+      - POSTGRES_DB=permissionsDB
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - postgres_data_permissions:/var/lib/postgresql/data
+    networks:
+      - snippet_network
+
+  asset-service:
+    container_name: "asset-service"
+    image: placeholder-image:latest
+    ports:
+      - "4000:8080"
+    environment:
+      AZURE_HOST: "http://azurite"
+      NEW_RELIC_APP_NAME: "asset-service"
+      NEW_RELIC_AGENT_ENABLED: true
+    networks:
+      - snippet_network
+
+  azurite:
+    image: mcr.microsoft.com/azure-storage/azurite
+    container_name: "azurite"
+    hostname: azurite
+    restart: always
+    ports:
+      - "10000:10000"
+      - "10001:10001"
+      - "10002:10002"
+    volumes:
+      - blob:/workspace
+    networks:
+      - snippet_network
+
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    ports:
+      - "6379:6379"
+    networks:
+      - snippet_network
+
+  ui-service:
+    image: placeholder-image:latest
+    container_name: ui-service
+    ports:
+      - "4173:80"
+    networks:
+      - snippet_network
+
+  proxy:
+    image: nginx:latest
+    container_name: proxy
+    depends_on:
+      - snippet-service
+      - printscript-service
+      - permissions-service
+      - asset-service
+      - azurite
+      - redis
+      - ui-service
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - /etc/letsencrypt:/etc/letsencrypt:ro
+    networks:
+      - snippet_network
+
+
+networks:
+  snippet_network:
+    driver: bridge
+
+volumes:
+  postgres_data_snippets:
+  postgres_data_permissions:
+  blob:
+    external: true
