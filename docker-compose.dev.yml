@@ -1,6 +1,6 @@
 services:
   snippet-service:
-    image: placeholder-image:latest
+    image: snippet-manager:latest
     container_name: snippet-service
     ports:
       - "9000:8080"
@@ -28,7 +28,6 @@ services:
     networks:
       - snippet_network
 
-
   db-snippet:
     image: postgres:latest
     container_name: db-snippet
@@ -43,9 +42,8 @@ services:
     networks:
       - snippet_network
 
-
   printscript-service:
-    image: placeholder-image:latest
+    image: printscript-manager:latest
     container_name: printscript-service
     depends_on:
       - redis
@@ -68,7 +66,7 @@ services:
       - snippet_network
 
   permissions-service:
-    image: placeholder-image:latest
+    image: permissions-manager:latest
     container_name: permissions-service
     ports:
       - "5000:8080"
@@ -103,7 +101,7 @@ services:
 
   asset-service:
     container_name: "asset-service"
-    image: placeholder-image:latest
+    image: placeholder-image:latest   # completar cuando tengas la imagen
     ports:
       - "4000:8080"
     environment:
@@ -127,7 +125,6 @@ services:
     networks:
       - snippet_network
 
-
   redis:
     image: redis:latest
     container_name: redis
@@ -137,7 +134,7 @@ services:
       - snippet_network
 
   ui-service:
-    image: placeholder-image:latest
+    image: placeholder-image:latest   # completar cuando tengas la imagen
     container_name: ui-service
     ports:
       - "4173:80"
@@ -163,7 +160,6 @@ services:
       - /etc/letsencrypt:/etc/letsencrypt:ro
     networks:
       - snippet_network
-
 
 networks:
   snippet_network:
