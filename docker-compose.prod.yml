@@ -1,6 +1,6 @@
 services:
   snippet-service:
-    image: placeholder-image:latest
+    image: ghcr.io/martinagarciagalasso/snippet-manager:latest-stable
     container_name: snippet-service
     ports:
       - "9000:8080"
@@ -45,7 +45,7 @@ services:
 
 
   printscript-service:
-    image: placeholder-image:latest
+    image: ghcr.io/martinagarciagalasso/printscript-manager:latest-stable
     container_name: printscript-service
     depends_on:
       - redis
@@ -68,7 +68,7 @@ services:
       - snippet_network
 
   permissions-service:
-    image: placeholder-image:latest
+    image: ghcr.io/martinagarciagalasso/permissions-manager:latest-stable
     container_name: permissions-service
     ports:
       - "5000:8080"
@@ -137,7 +137,7 @@ services:
       - snippet_network
 
   ui-service:
-    image: placeholder-image:latest
+    image: ghcr.io/martinagarciagalasso/printscript-ui:latest-prod
     container_name: ui-service
     ports:
       - "4173:80"
