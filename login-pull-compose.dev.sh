@@ -1,10 +1,10 @@
 #!/bin/bash
 
 # Definir el nombre de usuario del dueño del repositorio
-GHCR_USER="martinagarciagalasso" # Cambia esto por el nombre de usuario del dueño
+GHCR_USER="ingsis-second-chance"
 
 # Obtener el PAT de una variable de entorno del sistema
-GHCR_PAT="${GHCR_PAT}"
+GHCR_PAT=$(cat .env | grep GHCR_PAT | cut -d '=' -f2)
 
 # Verificar si la variable de entorno GHCR_PAT está definida
 if [ -z "$GHCR_PAT" ]; then
@@ -24,7 +24,7 @@ fi
 
 # Hacer docker-compose pull para obtener las últimas imágenes
 echo "Haciendo docker-compose pull... dev"
-docker compose -f docker-compose.dev.yml pull snippet-service printscript-service permissions-service ui-service
+docker compose -f docker-compose.dev.yml pull snippet-manager print-script-manager permissions-manager ui-service
 
 # Verifica si docker-compose pull fue exitoso
 if [ $? -ne 0 ]; then

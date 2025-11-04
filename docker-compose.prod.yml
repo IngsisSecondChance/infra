@@ -1,7 +1,7 @@
 services:
-  snippet-service:
-    image: ghcr.io/martinagarciagalasso/snippet-manager:latest-stable
-    container_name: snippet-service
+  snippet-manager:
+    image: ghcr.io/ingsis-second-chance/snippet-manager:latest
+    container_name: snippet-manager
     ports:
       - "9000:8080"
     depends_on:
@@ -44,9 +44,9 @@ services:
       - snippet_network
 
 
-  printscript-service:
-    image: ghcr.io/martinagarciagalasso/printscript-manager:latest-stable
-    container_name: printscript-service
+  print-script-manager:
+    image: ghcr.io/ingsis-second-chance/print-script-manager:latest
+    container_name: print-script-manager
     depends_on:
       - redis
     ports:
@@ -67,9 +67,9 @@ services:
     networks:
       - snippet_network
 
-  permissions-service:
-    image: ghcr.io/martinagarciagalasso/permissions-manager:latest-stable
-    container_name: permissions-service
+  permissions-manager:
+    image: ghcr.io/ingsis-second-chance/permissions-manager:latest
+    container_name: permissions-manager
     ports:
       - "5000:8080"
     depends_on:
@@ -137,7 +137,7 @@ services:
       - snippet_network
 
   ui-service:
-    image: ghcr.io/martinagarciagalasso/printscript-ui:latest-prod
+    image: ghcr.io/ingsis-second-chance/ui-service:latest
     container_name: ui-service
     ports:
       - "4173:80"
