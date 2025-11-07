@@ -146,10 +146,8 @@ services:
       - snippet_network
 
   ui-service:
-    image: ghcr.io/ingsis-second-chance/ui-service:dev
+    image: ghcr.io/ingsis-second-chance/printscript-ui:dev
     container_name: ui-service
-    ports:
-      - "4173:80"
     networks:
       - snippet_network
 
@@ -168,7 +166,7 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/nginx.dev.conf:/etc/nginx/nginx.conf:ro
       - /etc/letsencrypt:/etc/letsencrypt:ro
     networks:
       - snippet_network

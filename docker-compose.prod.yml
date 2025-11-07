@@ -137,10 +137,8 @@ services:
       - snippet_network
 
   ui-service:
-    image: ghcr.io/ingsis-second-chance/ui-service:latest
+    image: ghcr.io/ingsis-second-chance/printscript-ui:latest
     container_name: ui-service
-    ports:
-      - "4173:80"
     networks:
       - snippet_network
 
