@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Definir el nombre de usuario del dueño del repositorio
-GHCR_USER="Pedrodeforonda"
+GHCR_USER="ingsis-second-chance"
 
 # Obtener el PAT de una variable de entorno del sistema
 GHCR_PAT=$(cat .env | grep GHCR_PAT | cut -d '=' -f2)
