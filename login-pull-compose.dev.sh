@@ -24,7 +24,7 @@ fi
 
 # Hacer docker-compose pull para obtener las últimas imágenes
 echo "Haciendo docker-compose pull... dev"
-docker compose -f docker-compose.dev.yml pull snippet-manager print-script-manager permissions-manager ui-service
+docker-compose -f docker-compose.dev.yml pull snippet-manager print-script-manager permissions-manager ui-service
 
 # Verifica si docker-compose pull fue exitoso
 if [ $? -ne 0 ]; then
@@ -34,5 +34,5 @@ fi
 
 # Ejecutar docker-compose up para iniciar los servicios
 echo "Iniciando servicios con docker-compose up..."
-docker compose -f docker-compose.dev.yml up -d
+docker-compose -f docker-compose.dev.yml up -d
 
