@@ -109,7 +109,7 @@ services:
     environment:
       AZURE_HOST: "http://azurite"
       NEW_RELIC_APP_NAME: "asset-service"
-      NEW_RELIC_AGENT_ENABLED: true
+      NEW_RELIC_AGENT_ENABLED: "true"
     networks:
       - snippet_network
 
