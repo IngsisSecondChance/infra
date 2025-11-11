@@ -47,9 +47,4 @@ jobs:
           VM_IP: ${{ github.ref_name == 'main' && secrets.VM_PROD_IP || secrets.VM_DEV_IP }}
           COMPOSE_FILE: ${{ github.ref_name == 'main' && 'docker-compose.prod.yml' || 'docker-compose.dev.yml' }}
         run: |
-          ssh -o StrictHostKeyChecking=no ingsis@${VM_IP} << EOF
-          cd infra
-          docker compose -f ${COMPOSE_FILE} down snippet-manager print-script-manager permissions-manager ui-service
-          docker compose -f ${COMPOSE_FILE} pull snippet-manager print-script-manager permissions-manager ui-service
-          docker compose -f ${COMPOSE_FILE} up -d snippet-manager print-script-manager permissions-manager ui-service
-          EOF
+          ssh -o StrictHostKeyChecking=no ingsis@${VM_IP} "cd infra && docker compose -f ${COMPOSE_FILE} down snippet-manager print-script-manager permissions-manager ui-service && docker compose -f ${COMPOSE_FILE} pull snippet-manager print-script-manager permissions-manager ui-service && docker compose -f ${COMPOSE_FILE} up -d snippet-manager print-script-manager permissions-manager ui-service"
