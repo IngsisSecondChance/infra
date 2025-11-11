@@ -46,9 +46,8 @@ jobs:
 
       - name: Deploy to Azure VM
         run: |
-          ssh -v -o StrictHostKeyChecking=no ingsis@${{ env.VM_IP }} << 'ENDSSH'
-          cd infra
-          docker compose -f ${{ env.DOCKER_COMPOSE_FILE }} down snippet-manager print-script-manager permissions-manager ui-service
-          docker compose -f ${{ env.DOCKER_COMPOSE_FILE }} pull snippet-manager print-script-manager permissions-manager ui-service
-          docker compose -f ${{ env.DOCKER_COMPOSE_FILE }} up -d snippet-manager print-script-manager permissions-manager ui-service
-          ENDSSH
+          ssh -o StrictHostKeyChecking=no ingsis@${{ env.VM_IP }} \
+            "cd infra && \
+             docker compose -f ${{ env.DOCKER_COMPOSE_FILE }} down snippet-manager print-script-manager permissions-manager ui-service && \
+             docker compose -f ${{ env.DOCKER_COMPOSE_FILE }} pull snippet-manager print-script-manager permissions-manager ui-service && \
+             docker compose -f ${{ env.DOCKER_COMPOSE_FILE }} up -d snippet-manager print-script-manager permissions-manager ui-service"
