@@ -29,8 +29,6 @@ jobs:
 
     env:
       SSH_KEY: ${{ github.ref_name == 'main' && secrets.SSH_KEY_PROD || secrets.SSH_KEY_DEV }}
-      VM_IP: ${{ github.ref_name == 'main' && secrets.VM_PROD_IP || secrets.VM_DEV_IP }}
-      DOCKER_COMPOSE_FILE: ${{ github.ref_name == 'main' && 'docker-compose.prod.yml' || 'docker-compose.dev.yml' }}
 
     steps:
       - name: Checkout code
@@ -45,9 +43,13 @@ jobs:
           ssh-private-key: ${{ env.SSH_KEY }}
 
       - name: Deploy to Azure VM
+        env:
+          VM_IP: ${{ github.ref_name == 'main' && secrets.VM_PROD_IP || secrets.VM_DEV_IP }}
+          COMPOSE_FILE: ${{ github.ref_name == 'main' && 'docker-compose.prod.yml' || 'docker-compose.dev.yml' }}
         run: |
-          ssh -o StrictHostKeyChecking=no ingsis@${{ env.VM_IP }} \
-            "cd infra && \
-             docker compose -f ${{ env.DOCKER_COMPOSE_FILE }} down snippet-manager print-script-manager permissions-manager ui-service && \
-             docker compose -f ${{ env.DOCKER_COMPOSE_FILE }} pull snippet-manager print-script-manager permissions-manager ui-service && \
-             docker compose -f ${{ env.DOCKER_COMPOSE_FILE }} up -d snippet-manager print-script-manager permissions-manager ui-service"
+          ssh -o StrictHostKeyChecking=no ingsis@${VM_IP} << EOF
+          cd infra
+          docker compose -f ${COMPOSE_FILE} down snippet-manager print-script-manager permissions-manager ui-service
+          docker compose -f ${COMPOSE_FILE} pull snippet-manager print-script-manager permissions-manager ui-service
+          docker compose -f ${COMPOSE_FILE} up -d snippet-manager print-script-manager permissions-manager ui-service
+          EOF
