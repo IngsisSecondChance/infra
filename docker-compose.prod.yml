@@ -25,6 +25,10 @@ services:
       - REDIS_PORT=6379
       - REDIS_HOST=redis
       - NEW_RELIC_LICENSE_KEY=c54d3357ab8d20d61be74c168d239643FFFFNRAL
+      - NEW_RELIC_APP_NAME=snippet-manager
+      - JAVA_TOOL_OPTIONS=-javaagent:/newrelic/newrelic.jar
+    volumes:
+      - ./newrelic:/newrelic
     networks:
       - snippet_network
 
@@ -64,6 +68,10 @@ services:
       - REDIS_PORT=6379
       - REDIS_HOST=redis
       - NEW_RELIC_LICENSE_KEY=c54d3357ab8d20d61be74c168d239643FFFFNRAL
+      - NEW_RELIC_APP_NAME=snippet-manager
+      - JAVA_TOOL_OPTIONS=-javaagent:/newrelic/newrelic.jar
+    volumes:
+      - ./newrelic:/newrelic
     networks:
       - snippet_network
 
@@ -84,6 +92,10 @@ services:
       - AUTH_CLIENT_SECRET=5AguEjHjI0tPlkd6xbTp9K_1zZby9VxUzxREe3euAFOx1IgabBxAZNI1R0TeDYF9
       - AUTH0_AUDIENCE_API=https://dev-g1sija0qkp7jodd2.us.auth0.com/api/v2/
       - NEW_RELIC_LICENSE_KEY=c54d3357ab8d20d61be74c168d239643FFFFNRAL
+      - NEW_RELIC_APP_NAME=snippet-manager
+      - JAVA_TOOL_OPTIONS=-javaagent:/newrelic/newrelic.jar
+    volumes:
+      - ./newrelic:/newrelic
     networks:
       - snippet_network
 
