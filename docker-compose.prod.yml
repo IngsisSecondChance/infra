@@ -31,6 +31,7 @@ services:
       - ./newrelic:/newrelic
     networks:
       - snippet_network
+    restart: unless-stopped
 
 
   db-snippet:
@@ -46,6 +47,7 @@ services:
       - postgres_data_snippets:/var/lib/postgresql/data
     networks:
       - snippet_network
+    restart: unless-stopped
 
 
   print-script-manager:
@@ -74,6 +76,7 @@ services:
       - ./newrelic:/newrelic
     networks:
       - snippet_network
+    restart: unless-stopped
 
   permissions-manager:
     image: ghcr.io/ingsis-second-chance/permissions-manager:latest
@@ -98,6 +101,7 @@ services:
       - ./newrelic:/newrelic
     networks:
       - snippet_network
+    restart: unless-stopped
 
   db-permissions:
     image: postgres:latest
@@ -112,6 +116,7 @@ services:
       - postgres_data_permissions:/var/lib/postgresql/data
     networks:
       - snippet_network
+    restart: unless-stopped
 
   asset-service:
     container_name: "asset-service"
@@ -124,6 +129,7 @@ services:
       NEW_RELIC_AGENT_ENABLED: "true"
     networks:
       - snippet_network
+    restart: unless-stopped
 
   azurite:
     image: mcr.microsoft.com/azure-storage/azurite
@@ -138,6 +144,7 @@ services:
       - blob:/workspace
     networks:
       - snippet_network
+    restart: unless-stopped
 
 
   redis:
@@ -147,12 +154,14 @@ services:
       - "6379:6379"
     networks:
       - snippet_network
+    restart: unless-stopped
 
   ui-service:
     image: ghcr.io/ingsis-second-chance/printscript-ui:latest
     container_name: ui-service
     networks:
       - snippet_network
+    restart: unless-stopped
 
   proxy:
     image: nginx:latest
@@ -173,6 +182,7 @@ services:
       - /etc/letsencrypt:/etc/letsencrypt:ro
     networks:
       - snippet_network
+    restart: unless-stopped
 
 
 networks:
