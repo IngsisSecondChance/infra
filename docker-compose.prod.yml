@@ -3,7 +3,7 @@ services:
     image: ghcr.io/ingsis-second-chance/snippet-manager:latest
     container_name: snippet-manager
     ports:
-      - "9000:8081"
+      - "9000:8080"
     depends_on:
       - db-snippet
       - redis
@@ -11,8 +11,8 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db-snippet:5432/snippetDB
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=postgres
-      - PRINT_SCRIPT_SERVICE_URL=http://print-script-manager:8082
-      - PERMISSIONS_SERVICE_URL=http://permissions-manager:8083
+      - PRINT_SCRIPT_SERVICE_URL=http://print-script-manager:8080
+      - PERMISSIONS_SERVICE_URL=http://permissions-manager:8080
       - BUCKET_SERVICE_URL=http://asset-service:8080
       - AUTH0_AUDIENCE=https://snippet-searcher-api/
       - AUTH_SERVER_URI=https://dev-g1sija0qkp7jodd2.us.auth0.com/
@@ -34,7 +34,7 @@ services:
 
 
   db-snippet:
-    image: postgres:latest
+    image: postgres:15
     container_name: db-snippet
     ports:
       - "5432:5432"
@@ -54,7 +54,7 @@ services:
     depends_on:
       - redis
     ports:
-      - "3000:8082"
+      - "3000:8080"
     environment:
       - BUCKET_SERVICE_URL=http://asset-service:8080
       - AUTH0_AUDIENCE=https://snippet-searcher-api/
@@ -79,7 +79,7 @@ services:
     image: ghcr.io/ingsis-second-chance/permissions-manager:latest
     container_name: permissions-manager
     ports:
-      - "5000:8083"
+      - "5000:8080"
     depends_on:
       - db-permissions
     environment:
@@ -109,7 +109,7 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
     volumes:
-      - postgres_data_permissions:/var/lib/postgresql/data
+      - postgres_data_permissions:/var/lib/postgresql
     networks:
       - snippet_network
 
