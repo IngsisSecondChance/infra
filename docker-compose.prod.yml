@@ -3,7 +3,7 @@ services:
     image: ghcr.io/ingsis-second-chance/snippet-manager:latest
     container_name: snippet-manager
     ports:
-      - "9000:8080"
+      - "9000:8081"
     depends_on:
       - db-snippet
       - redis
@@ -34,7 +34,7 @@ services:
 
 
   db-snippet:
-    image: postgres:15
+    image: postgres:latest
     container_name: db-snippet
     ports:
       - "5432:5432"
@@ -54,7 +54,7 @@ services:
     depends_on:
       - redis
     ports:
-      - "3000:8080"
+      - "3000:8082"
     environment:
       - BUCKET_SERVICE_URL=http://asset-service:8080
       - AUTH0_AUDIENCE=https://snippet-searcher-api/
@@ -79,7 +79,7 @@ services:
     image: ghcr.io/ingsis-second-chance/permissions-manager:latest
     container_name: permissions-manager
     ports:
-      - "5000:8080"
+      - "5000:8083"
     depends_on:
       - db-permissions
     environment:
@@ -109,7 +109,7 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
     volumes:
-      - postgres_data_permissions:/var/lib/postgresql
+      - postgres_data_permissions:/var/lib/postgresql/data
     networks:
       - snippet_network
 
