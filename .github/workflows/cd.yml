@@ -61,9 +61,9 @@ jobs:
         run: |
           ssh -v -o StrictHostKeyChecking=no ${{ secrets.AZURE_USER }}@${{ secrets.VM_PROD_IP }} << ENDSSH
           cd infra
-          docker compose -f docker-compose.prod.yml down snippet-manager print-script-manager permissions-manager ui-service
-          docker compose -f docker-compose.prod.yml pull snippet-manager print-script-manager permissions-manager ui-service
-          docker compose -f docker-compose.prod.yml up -d snippet-manager print-script-manager permissions-manager ui-service
+          docker compose -f docker-compose.prod.yml down
+          docker compose -f docker-compose.prod.yml pull
+          docker compose -f docker-compose.prod.yml up -d
           ENDSSH
 
       - name: Deploy to Azure VM (dev)
