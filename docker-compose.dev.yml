@@ -43,7 +43,7 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
     volumes:
-      - postgres_data_snippets:/var/lib/postgresql/data
+      - postgres_data_snippets:/var/lib/postgresql
     networks:
       - snippet_network
     restart: unless-stopped
@@ -111,7 +111,7 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
     volumes:
-      - postgres_data_permissions:/var/lib/postgresql/data
+      - postgres_data_permissions:/var/lib/postgresql
     networks:
       - snippet_network
     restart: unless-stopped
