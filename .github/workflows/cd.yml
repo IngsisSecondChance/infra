@@ -71,9 +71,9 @@ jobs:
         run: |
           ssh -v -o StrictHostKeyChecking=no ${{ secrets.AZURE_USER }}@${{ secrets.VM_DEV_IP }} << ENDSSH
           cd infra
-          docker compose -f docker-compose.dev.yml down snippet-manager print-script-manager permissions-manager ui-service
-          docker compose -f docker-compose.dev.yml pull snippet-manager print-script-manager permissions-manager ui-service
-          docker compose -f docker-compose.dev.yml up -d snippet-manager print-script-manager permissions-manager ui-service
+          docker compose -f docker-compose.dev.yml down
+          docker compose -f docker-compose.dev.yml pull
+          docker compose -f docker-compose.dev.yml up -d
           ENDSSH
 
       - name: Stop VM
