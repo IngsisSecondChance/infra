@@ -16,9 +16,11 @@ services:
       - PRINT_SCRIPT_SERVICE_URL=http://print-script-manager:8082
       - PERMISSIONS_SERVICE_URL=http://permissions-manager:8083
       - BUCKET_SERVICE_URL=http://asset-service:8080
-      - AUTH_SERVER_URI=dev-vp3w4qxf5usvluez.us.auth0.com
       - AUTH0_ISSUER=https://dev-vp3w4qxf5usvluez.us.auth0.com/
       - AUTH0_AUDIENCE=https://snippet-api
+      - AUTH_SERVER_URI=https://dev-vp3w4qxf5usvluez.us.auth0.com/
+      - AUTH_CLIENT_ID=RkCAJGg3oX65F2DhiHzU82Urkoh3EYZs
+      - AUTH_CLIENT_SECRET=5AguEjHjI0tPlkd6xbTp9K_1zZby9VxUzxREe3euAFOx1IgabBxAZNI1R0TeDYF9
       - STREAM_LINT_KEY=snippet-lint
       - STREAM_FORMAT_KEY=snippet-format
       - STREAM_STATUS_KEY=snippet-status
@@ -53,16 +55,22 @@ services:
       - "3000:8082"
     environment:
       - BUCKET_SERVICE_URL=http://asset-service:8080
-      - AUTH0_ISSUER=https://dev-g1sija0qkp7jodd2.us.auth0.com/
-      - AUTH0_AUDIENCE=https://snippet-searcher-api/
-      - AUTH_SERVER_URI=https://dev-g1sija0qkp7jodd2.us.auth0.com/
+
+      # Auth0
+      - AUTH0_ISSUER=https://dev-vp3w4qxf5usvluez.us.auth0.com/
+      - AUTH0_AUDIENCE=https://snippet-api
+      - AUTH_SERVER_URI=https://dev-vp3w4qxf5usvluez.us.auth0.com/
       - AUTH_CLIENT_ID=RkCAJGg3oX65F2DhiHzU82Urkoh3EYZs
       - AUTH_CLIENT_SECRET=5AguEjHjI0tPlkd6xbTp9K_1zZby9VxUzxREe3euAFOx1IgabBxAZNI1R0TeDYF9
+
+      # Redis streams (igual que en la VM, pero dejando ambas keys por el placeholder)
       - STREAM_LINT_KEY=dnosadnisandonasdsoa
       - STREAM_FORMAT_KEY=fnosadnisandonasdsoa
       - STREAM_STATUS_KEY=dasdisanddasdasdasjdiuu-ddjjdjd
       - STREAM_CONSUMER_GROUP_SNIPPET=printscript-consumer-uudjdosaid-group
       - STREAM_CONSUMER_GROUP_PRINTSCRIPT=printscript-consumer-uudjdosaid-group
+
+      # Redis
       - REDIS_PORT=6379
       - REDIS_HOST=redis
     networks:
@@ -81,9 +89,13 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db-permissions:5432/permissionsDB
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=postgres
-      - AUTH_SERVER_URI=dev-vp3w4qxf5usvluez.us.auth0.com
+
+      # Auth0
       - AUTH0_ISSUER=https://dev-vp3w4qxf5usvluez.us.auth0.com/
       - AUTH0_AUDIENCE=https://snippet-api
+      - AUTH_SERVER_URI=https://dev-vp3w4qxf5usvluez.us.auth0.com/
+      - AUTH_CLIENT_ID=RkCAJGg3oX65F2DhiHzU82Urkoh3EYZs
+      - AUTH_CLIENT_SECRET=5AguEjHjI0tPlkd6xbTp9K_1zZby9VxUzxREe3euAFOx1IgabBxAZNI1R0TeDYF9
       - AUTH0_AUDIENCE_API=https://dev-vp3w4qxf5usvluez.us.auth0.com/api/v2/
     networks:
       - snippet_network
@@ -103,18 +115,18 @@ services:
       - snippet_network
 
   asset-service:
-    container_name: "asset-service"
+    container_name: asset-service
     image: ghcr.io/austral-ingsis/snippet-asset-service:latest
     ports:
       - "4000:8080"
     environment:
-      AZURE_HOST: "http://azurite"
+      - AZURE_HOST=http://azurite
     networks:
       - snippet_network
 
   azurite:
     image: mcr.microsoft.com/azure-storage/azurite
-    container_name: "azurite"
+    container_name: azurite
     hostname: azurite
     restart: always
     ports:

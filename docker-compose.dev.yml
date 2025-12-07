@@ -14,10 +14,10 @@ services:
       - PRINT_SCRIPT_SERVICE_URL=http://print-script-manager:8082
       - PERMISSIONS_SERVICE_URL=http://permissions-manager:8083
       - BUCKET_SERVICE_URL=http://asset-service:8080
-      - AUTH0_AUDIENCE=https://snippet-searcher-api/
-      - AUTH_SERVER_URI=https://dev-g1sija0qkp7jodd2.us.auth0.com/
-      - AUTH_CLIENT_ID=RkCAJGg3oX65F2DhiHzU82Urkoh3EYZs
-      - AUTH_CLIENT_SECRET=5AguEjHjI0tPlkd6xbTp9K_1zZby9VxUzxREe3euAFOx1IgabBxAZNI1R0TeDYF9
+      - AUTH_SERVER_URI=https://dev-vp3w4qxf5usvluez.us.auth0.com/
+      - AUTH0_ISSUER=https://dev-vp3w4qxf5usvluez.us.auth0.com/
+      - AUTH0_AUDIENCE=https://snippet-api
+      - AUTH0_AUDIENCE_API=https://dev-vp3w4qxf5usvluez.us.auth0.com/api/v2/
       - STREAM_LINT_KEY=snippet-lint
       - STREAM_FORMAT_KEY=snippet-format
       - STREAM_STATUS_KEY=snippet-status
@@ -55,10 +55,10 @@ services:
       - "3000:8082"
     environment:
       - BUCKET_SERVICE_URL=http://asset-service:8080
-      - AUTH0_AUDIENCE=https://snippet-searcher-api/
-      - AUTH_SERVER_URI=https://dev-g1sija0qkp7jodd2.us.auth0.com/
-      - AUTH_CLIENT_ID=RkCAJGg3oX65F2DhiHzU82Urkoh3EYZs
-      - AUTH_CLIENT_SECRET=5AguEjHjI0tPlkd6xbTp9K_1zZby9VxUzxREe3euAFOx1IgabBxAZNI1R0TeDYF9
+      - AUTH_SERVER_URI=https://dev-vp3w4qxf5usvluez.us.auth0.com/
+      - AUTH0_ISSUER=https://dev-vp3w4qxf5usvluez.us.auth0.com/
+      - AUTH0_AUDIENCE=https://snippet-api
+      - AUTH0_AUDIENCE_API=https://dev-vp3w4qxf5usvluez.us.auth0.com/api/v2/
       - STREAM_LINT_KEY=dnosadnisandonasdsoa
       - STREAM_FORMAT_KEY=fnosadnisandonasdsoa
       - STREAM_STATUS_KEY=dasdisanddasdasdasjdiuu-ddjjdjd
@@ -84,11 +84,11 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db-permissions:5432/permissionsDB
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=postgres
-      - AUTH0_AUDIENCE=https://snippet-searcher-api/
-      - AUTH_SERVER_URI=https://dev-g1sija0qkp7jodd2.us.auth0.com/
-      - AUTH_CLIENT_ID=RkCAJGg3oX65F2DhiHzU82Urkoh3EYZs
-      - AUTH_CLIENT_SECRET=5AguEjHjI0tPlkd6xbTp9K_1zZby9VxUzxREe3euAFOx1IgabBxAZNI1R0TeDYF9
-      - AUTH0_AUDIENCE_API=https://dev-g1sija0qkp7jodd2.us.auth0.com/api/v2/
+      - AUTH0_AUDIENCE=https://snippet-api
+      - AUTH_SERVER_URI=https://dev-vp3w4qxf5usvluez.us.auth0.com/
+      - AUTH_CLIENT_ID=<CLIENT_ID_NUEVO_BACKEND>
+      - AUTH_CLIENT_SECRET=<CLIENT_SECRET_NUEVO_BACKEND>
+      - AUTH0_AUDIENCE_API=https://dev-vp3w4qxf5usvluez.us.auth0.com/api/v2/
       - NEW_RELIC_LICENSE_KEY=c54d3357ab8d20d61be74c168d239643FFFFNRAL
       - NEW_RELIC_APP_NAME=permissions-manager
       - JAVA_TOOL_OPTIONS=-javaagent:/newrelic/newrelic.jar
