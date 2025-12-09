@@ -31,7 +31,6 @@ services:
       - snippet_network
     restart: unless-stopped
 
-
   db-snippet:
     image: postgres:latest
     container_name: db-snippet
@@ -46,7 +45,6 @@ services:
     networks:
       - snippet_network
     restart: unless-stopped
-
 
   print-script-manager:
     image: ghcr.io/ingsis-second-chance/print-script-manager:latest
