@@ -8,30 +8,28 @@ services:
       - db-snippet
       - redis
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://db-snippet:5432/snippetDB
-      - SPRING_DATASOURCE_USERNAME=postgres
-      - SPRING_DATASOURCE_PASSWORD=postgres
-      - PRINT_SCRIPT_SERVICE_URL=http://print-script-manager:8082
-      - PERMISSIONS_SERVICE_URL=http://permissions-manager:8083
-      - BUCKET_SERVICE_URL=http://asset-service:8080
-      - AUTH0_ISSUER=https://dev-vp3w4qxf5usvluez.us.auth0.com/
-      - AUTH0_AUDIENCE=https://snippet-api
-      - AUTH_SERVER_URI=https://dev-vp3w4qxf5usvluez.us.auth0.com/
-      - AUTH_CLIENT_ID=RkCAJGg3oX65F2DhiHzU82Urkoh3EYZs
-      - AUTH_CLIENT_SECRET=5AguEjHjI0tPlkd6xbTp9K_1zZby9VxUzxREe3euAFOx1IgabBxAZNI1R0TeDYF9
-      - STREAM_LINT_KEY=snippet-lint
-      - STREAM_FORMAT_KEY=snippet-format
-      - STREAM_STATUS_KEY=snippet-status
-      - STREAM_CONSUMER_GROUP_SNIPPET=snippet-consumer-group
-      - REDIS_PORT=6379
-      - REDIS_HOST=redis
-      - NEW_RELIC_LICENSE_KEY=c54d3357ab8d20d61be74c168d239643FFFFNRAL
-      - NEW_RELIC_APP_NAME=snippet-manager
-      - JAVA_TOOL_OPTIONS=-javaagent:/newrelic/newrelic.jar
+      - SPRING_DATASOURCE_URL=${SNIPPET_DB_URL}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - PRINT_SCRIPT_SERVICE_URL=${PRINT_SCRIPT_SERVICE_URL}
+      - PERMISSIONS_SERVICE_URL=${PERMISSIONS_SERVICE_URL}
+      - BUCKET_SERVICE_URL=${BUCKET_SERVICE_URL}
+      - AUTH0_AUDIENCE=${AUTH0_AUDIENCE}
+      - AUTH_SERVER_URI=${AUTH_SERVER_URI}
+      - AUTH0_ISSUER=${AUTH0_ISSUER}
+      - STREAM_LINT_KEY=${STREAM_LINT_KEY}
+      - STREAM_FORMAT_KEY=${STREAM_FORMAT_KEY}
+      - STREAM_STATUS_KEY=${STREAM_STATUS_KEY}
+      - STREAM_CONSUMER_GROUP_SNIPPET=${STREAM_CONSUMER_GROUP_SNIPPET}
+      - REDIS_HOST=${REDIS_HOST}
+      - NEW_RELIC_LICENSE_KEY=${NEW_RELIC_LICENSE_KEY}
+      - NEW_RELIC_APP_NAME=${NEW_RELIC_APP_NAME_SNIPPET}
+      - JAVA_TOOL_OPTIONS=${JAVA_TOOL_OPTIONS}
     volumes:
       - ./newrelic:/newrelic
     networks:
       - snippet_network
+    restart: unless-stopped
 
   db-snippet:
     image: postgres:latest
@@ -39,13 +37,14 @@ services:
     ports:
       - "5432:5432"
     environment:
-      - POSTGRES_DB=snippetDB
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=${SNIPPET_DB_NAME}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     volumes:
-      - postgres_data_snippets:/var/lib/postgresql/data
+      - postgres_data_snippets:/var/lib/postgresql
     networks:
       - snippet_network
+    restart: unless-stopped
 
   print-script-manager:
     image: ghcr.io/ingsis-second-chance/print-script-manager:latest
@@ -55,26 +54,23 @@ services:
     ports:
       - "3000:8082"
     environment:
-      - BUCKET_SERVICE_URL=http://asset-service:8080
-      - AUTH0_ISSUER=https://dev-vp3w4qxf5usvluez.us.auth0.com/
-      - AUTH0_AUDIENCE=https://snippet-api
-      - AUTH_SERVER_URI=https://dev-vp3w4qxf5usvluez.us.auth0.com/
-      - AUTH_CLIENT_ID=RkCAJGg3oX65F2DhiHzU82Urkoh3EYZs
-      - AUTH_CLIENT_SECRET=5AguEjHjI0tPlkd6xbTp9K_1zZby9VxUzxREe3euAFOx1IgabBxAZNI1R0TeDYF9
-      - STREAM_LINT_KEY=dnosadnisandonasdsoa
-      - STREAM_FORMAT_KEY=fnosadnisandonasdsoa
-      - STREAM_STATUS_KEY=dasdisanddasdasdasjdiuu-ddjjdjd
-      - STREAM_CONSUMER_GROUP_PRINTSCRIPT=printscript-consumer-uudjdosaid-group
-      - STREAM_CONSUMER_GROUP_SNIPPET=printscript-consumer-uudjdosaid-group
-      - REDIS_PORT=6379
-      - REDIS_HOST=redis
-      - NEW_RELIC_LICENSE_KEY=c54d3357ab8d20d61be74c168d239643FFFFNRAL
-      - NEW_RELIC_APP_NAME=snippet-manager
-      - JAVA_TOOL_OPTIONS=-javaagent:/newrelic/newrelic.jar
+      - BUCKET_SERVICE_URL=${BUCKET_SERVICE_URL}
+      - AUTH0_AUDIENCE=${AUTH0_AUDIENCE}
+      - AUTH_SERVER_URI=${AUTH_SERVER_URI}
+      - AUTH0_ISSUER=${AUTH0_ISSUER}
+      - STREAM_LINT_KEY=${STREAM_LINT_KEY}
+      - STREAM_FORMAT_KEY=${STREAM_FORMAT_KEY}
+      - STREAM_STATUS_KEY=${STREAM_STATUS_KEY}
+      - STREAM_CONSUMER_GROUP_SNIPPET=${STREAM_CONSUMER_GROUP_SNIPPET}
+      - REDIS_HOST=${REDIS_HOST}
+      - NEW_RELIC_LICENSE_KEY=${NEW_RELIC_LICENSE_KEY}
+      - NEW_RELIC_APP_NAME=${NEW_RELIC_APP_NAME_SNIPPET}
+      - JAVA_TOOL_OPTIONS=${JAVA_TOOL_OPTIONS}
     volumes:
       - ./newrelic:/newrelic
     networks:
       - snippet_network
+    restart: unless-stopped
 
   permissions-manager:
     image: ghcr.io/ingsis-second-chance/permissions-manager:latest
@@ -84,26 +80,20 @@ services:
     depends_on:
       - db-permissions
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://db-permissions:5432/permissionsDB
-      - SPRING_DATASOURCE_USERNAME=postgres
-      - SPRING_DATASOURCE_PASSWORD=postgres
-
-      # Auth0 (tenant nuevo)
-      - AUTH0_ISSUER=https://dev-vp3w4qxf5usvluez.us.auth0.com/
-      - AUTH0_AUDIENCE=https://snippet-api
-      - AUTH_SERVER_URI=https://dev-vp3w4qxf5usvluez.us.auth0.com/
-      - AUTH_CLIENT_ID=RkCAJGg3oX65F2DhiHzU82Urkoh3EYZs
-      - AUTH_CLIENT_SECRET=5AguEjHjI0tPlkd6xbTp9K_1zZby9VxUzxREe3euAFOx1IgabBxAZNI1R0TeDYF9
-      - AUTH0_AUDIENCE_API=https://dev-vp3w4qxf5usvluez.us.auth0.com/api/v2/
-
-      # New Relic
-      - NEW_RELIC_LICENSE_KEY=c54d3357ab8d20d61be74c168d239643FFFFNRAL
-      - NEW_RELIC_APP_NAME=snippet-manager
-      - JAVA_TOOL_OPTIONS=-javaagent:/newrelic/newrelic.jar
+      - SPRING_DATASOURCE_URL=${PERMISSIONS_DB_URL}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - AUTH0_AUDIENCE=${AUTH0_AUDIENCE}
+      - AUTH_SERVER_URI=${AUTH_SERVER_URI}
+      - AUTH0_ISSUER=${AUTH0_ISSUER}
+      - NEW_RELIC_LICENSE_KEY=${NEW_RELIC_LICENSE_KEY}
+      - NEW_RELIC_APP_NAME=${NEW_RELIC_APP_NAME_PERMISSIONS}
+      - JAVA_TOOL_OPTIONS=${JAVA_TOOL_OPTIONS}
     volumes:
       - ./newrelic:/newrelic
     networks:
       - snippet_network
+    restart: unless-stopped
 
   db-permissions:
     image: postgres:latest
@@ -111,13 +101,14 @@ services:
     ports:
       - "5433:5432"
     environment:
-      - POSTGRES_DB=permissionsDB
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=${PERMISSIONS_DB_NAME}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     volumes:
-      - postgres_data_permissions:/var/lib/postgresql/data
+      - postgres_data_permissions:/var/lib/postgresql
     networks:
       - snippet_network
+    restart: unless-stopped
 
   asset-service:
     container_name: "asset-service"
@@ -125,17 +116,17 @@ services:
     ports:
       - "4000:8080"
     environment:
-      AZURE_HOST: "http://azurite"
-      NEW_RELIC_APP_NAME: "asset-service"
-      NEW_RELIC_AGENT_ENABLED: "true"
+      AZURE_HOST: ${AZURE_HOST}
+      NEW_RELIC_APP_NAME: ${NEW_RELIC_APP_NAME_ASSET}
+      NEW_RELIC_AGENT_ENABLED: ${NEW_RELIC_AGENT_ENABLED}
     networks:
       - snippet_network
+    restart: unless-stopped
 
   azurite:
     image: mcr.microsoft.com/azure-storage/azurite
     container_name: "azurite"
     hostname: azurite
-    restart: always
     ports:
       - "10000:10000"
       - "10001:10001"
@@ -144,6 +135,7 @@ services:
       - blob:/workspace
     networks:
       - snippet_network
+    restart: unless-stopped
 
 
   redis:
@@ -153,12 +145,14 @@ services:
       - "6379:6379"
     networks:
       - snippet_network
+    restart: unless-stopped
 
   ui-service:
     image: ghcr.io/ingsis-second-chance/printscript-ui:latest
     container_name: ui-service
     networks:
       - snippet_network
+    restart: unless-stopped
 
   proxy:
     image: nginx:latest
@@ -179,6 +173,7 @@ services:
       - /etc/letsencrypt:/etc/letsencrypt:ro
     networks:
       - snippet_network
+    restart: unless-stopped
 
 
 networks:
