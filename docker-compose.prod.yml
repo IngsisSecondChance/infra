@@ -15,8 +15,9 @@ services:
       - PERMISSIONS_SERVICE_URL=${PERMISSIONS_SERVICE_URL}
       - BUCKET_SERVICE_URL=${BUCKET_SERVICE_URL}
       - AUTH0_AUDIENCE=${AUTH0_AUDIENCE}
-      - AUTH_SERVER_URI=${AUTH_SERVER_URI}
-      - AUTH0_ISSUER=${AUTH0_ISSUER}
+      - AUTH0_SERVER_URI=${AUTH0_SERVER_URI}
+      - AUTH0_CLIENT_ID=${AUTH0_CLIENT_ID}
+      - AUTH0_CLIENT_SECRET=${AUTH0_CLIENT_SECRET}
       - STREAM_LINT_KEY=${STREAM_LINT_KEY}
       - STREAM_FORMAT_KEY=${STREAM_FORMAT_KEY}
       - STREAM_STATUS_KEY=${STREAM_STATUS_KEY}
@@ -56,8 +57,9 @@ services:
     environment:
       - BUCKET_SERVICE_URL=${BUCKET_SERVICE_URL}
       - AUTH0_AUDIENCE=${AUTH0_AUDIENCE}
-      - AUTH_SERVER_URI=${AUTH_SERVER_URI}
-      - AUTH0_ISSUER=${AUTH0_ISSUER}
+      - AUTH0_SERVER_URI=${AUTH0_SERVER_URI}
+      - AUTH0_CLIENT_ID=${AUTH0_CLIENT_ID}
+      - AUTH0_CLIENT_SECRET=${AUTH0_CLIENT_SECRET}
       - STREAM_LINT_KEY=${STREAM_LINT_KEY}
       - STREAM_FORMAT_KEY=${STREAM_FORMAT_KEY}
       - STREAM_STATUS_KEY=${STREAM_STATUS_KEY}
@@ -84,8 +86,9 @@ services:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - AUTH0_AUDIENCE=${AUTH0_AUDIENCE}
-      - AUTH_SERVER_URI=${AUTH_SERVER_URI}
-      - AUTH0_ISSUER=${AUTH0_ISSUER}
+      - AUTH0_SERVER_URI=${AUTH0_SERVER_URI}
+      - AUTH0_CLIENT_ID=${AUTH0_CLIENT_ID}
+      - AUTH0_CLIENT_SECRET=${AUTH0_CLIENT_SECRET}
       - NEW_RELIC_LICENSE_KEY=${NEW_RELIC_LICENSE_KEY}
       - NEW_RELIC_APP_NAME=${NEW_RELIC_APP_NAME_PERMISSIONS}
       - JAVA_TOOL_OPTIONS=${JAVA_TOOL_OPTIONS}
@@ -111,21 +114,21 @@ services:
     restart: unless-stopped
 
   asset-service:
-    container_name: "asset-service"
+    container_name: asset-service
     image: ghcr.io/austral-ingsis/snippet-asset-service:latest
     ports:
       - "4000:8080"
     environment:
-      AZURE_HOST: ${AZURE_HOST}
-      NEW_RELIC_APP_NAME: ${NEW_RELIC_APP_NAME_ASSET}
-      NEW_RELIC_AGENT_ENABLED: ${NEW_RELIC_AGENT_ENABLED}
+      - AZURE_HOST=${AZURE_HOST}
+      - NEW_RELIC_APP_NAME=${NEW_RELIC_APP_NAME_ASSET}
+      - NEW_RELIC_AGENT_ENABLED=${NEW_RELIC_AGENT_ENABLED}
     networks:
       - snippet_network
     restart: unless-stopped
 
   azurite:
     image: mcr.microsoft.com/azure-storage/azurite
-    container_name: "azurite"
+    container_name: azurite
     hostname: azurite
     ports:
       - "10000:10000"
@@ -136,7 +139,6 @@ services:
     networks:
       - snippet_network
     restart: unless-stopped
-
 
   redis:
     image: redis:latest
@@ -174,7 +176,6 @@ services:
     networks:
       - snippet_network
     restart: unless-stopped
-
 
 networks:
   snippet_network:

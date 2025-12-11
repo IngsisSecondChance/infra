@@ -23,20 +23,14 @@ services:
       - STREAM_STATUS_KEY=${STREAM_STATUS_KEY}
       - STREAM_CONSUMER_GROUP_SNIPPET=${STREAM_CONSUMER_GROUP_SNIPPET}
       - REDIS_HOST=${REDIS_HOST}
-      - NEW_RELIC_LICENSE_KEY=${NEW_RELIC_LICENSE_KEY}
-      - NEW_RELIC_APP_NAME=${NEW_RELIC_APP_NAME_SNIPPET}
-      - JAVA_TOOL_OPTIONS=${JAVA_TOOL_OPTIONS}
-    volumes:
-      - ./newrelic:/newrelic
     networks:
       - snippet_network
-    restart: unless-stopped
 
   db-snippet:
     image: postgres:latest
     container_name: db-snippet
     ports:
-      - "5432:5432"
+      - "5433:5432"
     environment:
       - POSTGRES_DB=${SNIPPET_DB_NAME}
       - POSTGRES_USER=${POSTGRES_USER}
@@ -45,7 +39,6 @@ services:
       - postgres_data_snippets:/var/lib/postgresql
     networks:
       - snippet_network
-    restart: unless-stopped
 
   print-script-manager:
     image: ghcr.io/ingsis-second-chance/print-script-manager:dev
@@ -64,21 +57,14 @@ services:
       - STREAM_FORMAT_KEY=${STREAM_FORMAT_KEY}
       - STREAM_STATUS_KEY=${STREAM_STATUS_KEY}
       - STREAM_CONSUMER_GROUP_SNIPPET=${STREAM_CONSUMER_GROUP_SNIPPET}
-      - REDIS_HOST=${REDIS_HOST}
-      - NEW_RELIC_LICENSE_KEY=${NEW_RELIC_LICENSE_KEY}
-      - NEW_RELIC_APP_NAME=${NEW_RELIC_APP_NAME_SNIPPET}
-      - JAVA_TOOL_OPTIONS=${JAVA_TOOL_OPTIONS}
-    volumes:
-      - ./newrelic:/newrelic
     networks:
       - snippet_network
-    restart: unless-stopped
 
   permissions-manager:
     image: ghcr.io/ingsis-second-chance/permissions-manager:dev
     container_name: permissions-manager
     ports:
-      - "5000:8083"
+      - "5001:8083"
     depends_on:
       - db-permissions
     environment:
@@ -89,20 +75,14 @@ services:
       - AUTH0_SERVER_URI=${AUTH0_SERVER_URI}
       - AUTH0_CLIENT_ID=${AUTH0_CLIENT_ID}
       - AUTH0_CLIENT_SECRET=${AUTH0_CLIENT_SECRET}
-      - NEW_RELIC_LICENSE_KEY=${NEW_RELIC_LICENSE_KEY}
-      - NEW_RELIC_APP_NAME=${NEW_RELIC_APP_NAME_PERMISSIONS}
-      - JAVA_TOOL_OPTIONS=${JAVA_TOOL_OPTIONS}
-    volumes:
-      - ./newrelic:/newrelic
     networks:
       - snippet_network
-    restart: unless-stopped
 
   db-permissions:
     image: postgres:latest
     container_name: db-permissions
     ports:
-      - "5433:5432"
+      - "5434:5432"
     environment:
       - POSTGRES_DB=${PERMISSIONS_DB_NAME}
       - POSTGRES_USER=${POSTGRES_USER}
@@ -111,7 +91,6 @@ services:
       - postgres_data_permissions:/var/lib/postgresql
     networks:
       - snippet_network
-    restart: unless-stopped
 
   asset-service:
     container_name: asset-service
@@ -120,16 +99,14 @@ services:
       - "4000:8080"
     environment:
       - AZURE_HOST=${AZURE_HOST}
-      - NEW_RELIC_APP_NAME=${NEW_RELIC_APP_NAME_ASSET}
-      - NEW_RELIC_AGENT_ENABLED=${NEW_RELIC_AGENT_ENABLED}
     networks:
       - snippet_network
-    restart: unless-stopped
 
   azurite:
     image: mcr.microsoft.com/azure-storage/azurite
     container_name: azurite
     hostname: azurite
+    restart: always
     ports:
       - "10000:10000"
       - "10001:10001"
@@ -138,7 +115,6 @@ services:
       - blob:/workspace
     networks:
       - snippet_network
-    restart: unless-stopped
 
   redis:
     image: redis:latest
@@ -147,14 +123,19 @@ services:
       - "6379:6379"
     networks:
       - snippet_network
-    restart: unless-stopped
 
   ui-service:
-    image: ghcr.io/ingsis-second-chance/printscript-ui:dev
     container_name: ui-service
+    build:
+      context: ../printscript-ui
+      dockerfile: Dockerfile.dev
+      args:
+        VITE_AUTH0_DOMAIN: ${VITE_AUTH0_DOMAIN}
+        VITE_AUTH0_CLIENT_ID: ${VITE_AUTH0_CLIENT_ID}
+        VITE_AUTH0_AUDIENCE: ${VITE_AUTH0_AUDIENCE}
+        BACKEND_URL: http://localhost/api/snippet
     networks:
       - snippet_network
-    restart: unless-stopped
 
   proxy:
     image: nginx:latest
@@ -169,13 +150,10 @@ services:
       - ui-service
     ports:
       - "80:80"
-      - "443:443"
     volumes:
-      - ./nginx/nginx.dev.conf:/etc/nginx/nginx.conf:ro
-      - /etc/letsencrypt:/etc/letsencrypt:ro
+      - ./nginx/nginx.local.conf:/etc/nginx/nginx.conf:ro
     networks:
       - snippet_network
-    restart: unless-stopped
 
 networks:
   snippet_network:
